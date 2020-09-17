@@ -12,7 +12,7 @@ from torchvision import datasets, transforms, utils
 import matplotlib.pyplot as plt
 
 batch_size = 64
-epochs = 50
+epochs = 20
 
 
 class Net(nn.Module):
@@ -29,7 +29,7 @@ class Net(nn.Module):
         self.relu = nn.ReLU()
         self.fc1 = nn.Linear(120, 84)
         self.fc2 = nn.Linear(84, 10)
-        self.softmax = nn.LogSoftmax(dim=1)
+        self.softmax = nn.LogSoftmax(dim=1)  # log to solve value overflow
 
     def forward(self, x):
         # block1
@@ -86,7 +86,7 @@ def train(model, train_loader, optimizer, epoch, device, train_loss_lst, train_a
         pred = outputs.max(1, keepdim=True)[1]
         correct += pred.eq(labels.view_as(pred)).sum().item()
 
-        loss = F.nll_loss(outputs, labels)
+        loss = F.nll_loss(outputs, labels)  # negative log likelihood loss
         loss.backward()
         optimizer.step()
 
