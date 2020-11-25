@@ -51,11 +51,11 @@ class AlexNet(nn.Module):
     def __init__(self, num_classes=10):
         super(AlexNet, self).__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(3, 96, 11, stride=4),
+            nn.Conv2d(3, 96, 11, stride=4, padding=2),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(3, 2),
 
-            nn.Conv2d(96, 256, 5),
+            nn.Conv2d(96, 256, 5, padding=2),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(3, 2),
 
@@ -101,7 +101,7 @@ class VGGNet(nn.Module):
         self.block1 = nn.Sequential(
             nn.Conv2d(3, 64, 3, padding=1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(64, 128, 3),
+            nn.Conv2d(64, 64, 3, padding=1),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2, stride=2)
         )
@@ -146,7 +146,7 @@ class VGGNet(nn.Module):
             nn.Linear(4096, 4096),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(4096, self.num_classes)
+            nn.Linear(4096, num_classes)
         )
         self.softmax = nn.LogSoftmax(dim=1)
 

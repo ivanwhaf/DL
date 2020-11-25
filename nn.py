@@ -272,7 +272,7 @@ class NeuralNetwork:
                 loss = mse_loss(y_train, y_preds)
                 print("Epoch: %d,loss: %.3f" % (epoch + 1, loss))
 
-
+# ==============================heredity algorithm==============================
 def sort_score(nets) -> list:
     """
     sort networks by their score(fitness), big-->small

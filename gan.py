@@ -15,7 +15,7 @@ from torchvision import datasets, transforms, utils
 import matplotlib.pyplot as plt
 
 
-epochs = 200
+epochs = 100
 batch_size = 64
 lr = 0.0003  # better be low!
 
@@ -106,21 +106,24 @@ if __name__ == "__main__":
             # define label equal 0
             fake_label = Variable(torch.zeros(num_img)).cuda()
 
-            # =============train discriminator==================
+            # =================train discriminator===================
+            # calculate real loss
             real_out = discriminator(real_img)
             loss_real = criterion(real_out, real_label)
 
+            # calculate fake loss
             noise = Variable(torch.randn(num_img, nosie_size)).cuda()
             fake_img = generator(noise).detach()
             fake_out = discriminator(fake_img)
             loss_fake = criterion(fake_out, fake_label)
 
+            # back prop
             d_loss = loss_real+loss_fake
             d_optimizer.zero_grad()
             d_loss.backward()
             d_optimizer.step()
 
-            # ==============train generator=====================
+            # ==================train generator=====================
             noise = Variable(torch.randn(num_img, nosie_size)).cuda()
             fake_img = generator(noise)
             d_out = discriminator(fake_img)

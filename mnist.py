@@ -12,7 +12,7 @@ from torchvision import datasets, transforms, utils
 import matplotlib.pyplot as plt
 
 batch_size = 64
-epochs = 20
+epochs = 40
 
 
 class Net(nn.Module):
@@ -61,7 +61,7 @@ def load_dataset():
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])
-
+    
     train_dataset = datasets.MNIST(
         './dataset', train=True, download=True, transform=transform)
     test_dataset = datasets.MNIST(

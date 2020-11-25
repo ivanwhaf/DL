@@ -9,13 +9,13 @@ from torch.autograd import Variable
 import numpy as np
 
 env = gym.make('CartPole-v0')
-episodes = 300
+episodes = 3000
 capacity = 2000  # replay memory's capacity
 Epsilon = 0.9  # ε
 GAMMA = 0.9  # γ
 batch_size = 64
 lr = 0.01
-target_update_freq = 100
+target_update_freq = 100  # frequence of updating target network
 train_count = 0
 
 
@@ -78,6 +78,7 @@ def choose_action(state, eval_net):
 
 
 def train(eval_net, target_net, replay_memory, batch_size, optimizer):
+    eval_net.train()
     # copy eval net parameters to target net according to update freq
     if train_count % target_update_freq == 0:
         print('Copy eval net parameters to target net')
@@ -111,7 +112,8 @@ def train(eval_net, target_net, replay_memory, batch_size, optimizer):
     optimizer.step()
 
 
-if __name__ == "__main__":
+def main():
+    global train_count
     eval_net = DQN()
     target_net = DQN()
     replay_memory = ReplayMemory(capacity)
@@ -125,11 +127,11 @@ if __name__ == "__main__":
             state_, reward, done, info = env.step(action)
 
             # modify the reward, very important
-            x, x_dot, theta, theta_dot = state_
-            r1 = (env.x_threshold - abs(x)) / env.x_threshold - 0.8
-            r2 = (env.theta_threshold_radians - abs(theta)) / \
-                env.theta_threshold_radians - 0.5
-            reward = r1 + r2
+            # x, x_dot, theta, theta_dot = state_
+            # r1 = (env.x_threshold - abs(x)) / env.x_threshold - 0.8
+            # r2 = (env.theta_threshold_radians - abs(theta)) / \
+            #     env.theta_threshold_radians - 0.5
+            # reward = r1 + r2
 
             replay_memory.add_memory((state, [action, reward], state_))
 
@@ -142,5 +144,29 @@ if __name__ == "__main__":
 
             state = state_
 
+    torch.save(eval_net, "./model/dqn_cartpole.pth")
     env.close()
-    torch.save(eval_net, "./model/dqn_cartploe.pth")
+
+
+def test():
+    model = torch.load('./model/dqn_cartpole.pth')
+    model.eval()
+    for episode in range(100):
+        state = env.reset()
+        for t in range(1000):
+            env.render()
+            # state = Variable(torch.FloatTensor(state))
+            # output = model(state)
+            # action = output.max(0)[1].numpy()
+            action = choose_action(state, model)
+            state_, reward, done, info = env.step(action)
+            state = state_
+            if done:
+                print("Episode {} finished after {} timesteps".format(episode+1, t+1))
+                break
+    env.close()
+
+
+if __name__ == "__main__":
+    main()
+    # test()
