@@ -1,10 +1,11 @@
 import tkinter as tk
-from tkinter import Listbox
+
 import torch
-from torch import nn
-from torch.autograd import Variable
-from torchvision import transforms
 from PIL import Image, ImageDraw
+from torch import nn
+from torchvision import transforms
+
+
 # import numpy as np
 
 
@@ -21,7 +22,7 @@ class Window:
         label = tk.Label(window, text='请在画板上画出数字，并点击“识别”按钮识别数字', font=('Arial', 10))
         label.pack()
 
-        # handdrawing canvas
+        # hand-drawing canvas
         self.canvas = tk.Canvas(window, bg='black', width=200, height=200)
         self.canvas.pack()
         self.canvas.bind('<Button-1>', self.onLeftButtonDown)
@@ -44,7 +45,7 @@ class Window:
         self.image = Image.new("RGB", (200, 200), (0, 0, 0))
         self.draw = ImageDraw.Draw(self.image)
 
-        # bottom statusbar
+        # bottom status bar
         self.statusbar = tk.Label(
             window, text="", bd=1, relief=tk.SUNKEN, anchor=tk.W)
         self.statusbar.pack(side=tk.BOTTOM, fill=tk.X)
@@ -85,7 +86,7 @@ class Window:
         # image = np.expand_dims(image, 0)
         # image = np.array(image)
         # image = torch.Tensor(image)
-        
+
         transform = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize((0.1307,), (0.3081,))
@@ -98,9 +99,9 @@ class Window:
         output = self.model(image)
         # find index of max prob
         pred = output.max(1, keepdim=True)[1]
-        num=pred.cpu().numpy()[0][0]
-        self.statusbar.config(text='predict num:'+str(num))
-        print('predict:'+str(num))
+        num = pred.cpu().numpy()[0][0]
+        self.statusbar.config(text='predict num:' + str(num))
+        print('predict:' + str(num))
 
     def clear(self):
         # clear canvas

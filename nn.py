@@ -1,4 +1,5 @@
 import random
+
 import numpy as np
 
 
@@ -271,6 +272,7 @@ class NeuralNetwork:
                 y_preds = np.apply_along_axis(self.feedforward, 1, x_train)
                 loss = mse_loss(y_train, y_preds)
                 print("Epoch: %d,loss: %.3f" % (epoch + 1, loss))
+
 
 # ==============================heredity algorithm==============================
 def sort_score(nets) -> list:
